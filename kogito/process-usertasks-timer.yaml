@@ -1,0 +1,11 @@
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoRuntime
+metadata:
+  name: process-usertasks-timer  
+spec:
+  infra:
+    - kogito-kafka-infra
+    - kogito-infinispan-infra
+  runtime: quarkus
+  image: 'quay.io/vajain/process-usertasks-timer-quarkus-with-console:29.0'
+  replicas: 1  

@@ -1,0 +1,11 @@
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoSupportingService
+metadata:  
+  name: kogito-data-index
+spec:
+  image: quay.io/kiegroup/kogito-data-index-infinispan:1.12
+  infra:
+    - kogito-kafka-infra
+    - kogito-infinispan-infra
+  replicas: 1
+  serviceType: DataIndex

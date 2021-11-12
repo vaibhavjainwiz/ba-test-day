@@ -1,0 +1,16 @@
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoSupportingService
+metadata:
+  name: kogito-jobs-service
+spec:
+  image: quay.io/kiegroup/kogito-jobs-service-ephemeral:1.12
+  infra:
+    - kogito-kafka-infra
+  env:
+    - name: KOGITO_JOBS_PROPS
+      value: >-
+        -Dquarkus-profile=events-support
+        -D%events-support.kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.ba-test-day-1.svc:9092
+        -D%events-support.mp.messaging.outgoing.kogito-job-service-job-status-events.bootstrap.servers=kogito-kafka-kafka-bootstrap.ba-test-day-1.svc:9092  
+  replicas: 1
+  serviceType: JobsService

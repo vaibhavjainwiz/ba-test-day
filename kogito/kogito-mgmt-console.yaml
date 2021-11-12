@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:  
+  name: kogito-mgmt-console
+  labels:
+    app: kogito-mgmt-console
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kogito-mgmt-console
+  template:
+    metadata:
+      labels:
+        app: kogito-mgmt-console
+    spec:
+      containers:
+        - resources: {}
+          readinessProbe:
+            httpGet:
+              path: /q/health/ready
+              port: 8080
+              scheme: HTTP
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: kogito-mgmt-console
+          livenessProbe:
+            httpGet:
+              path: /q/health/live
+              port: 8080
+              scheme: HTTP
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+            - name: KOGITO_DATAINDEX_HTTP_URL
+              value: >-
+                http://kogito-data-index-ba-test-day-1.apps.test-day.rhba.baqe.org/graphql
+            - name: KOGITO_DATAINDEX_WS_URL
+              value: 'ws://kogito-data-index-ba-test-day-1.apps.test-day.rhba.baqe.org/graphql'
+            - name: KOGITO_MANAGEMENT_CONSOLE_PROPS
+              value: >-
+                -Dkogito.consoles.keycloak.config.url=http://kogito-keycloak-ba-test-day-1.apps.test-day.rhba.baqe.org/auth
+                -Dkogito.consoles.keycloak.config.health-check-url=http://kogito-keycloak-ba-test-day-1.apps.test-day.rhba.baqe.org/auth/realms/kogito/.well-known/openid-configuration
+                -Dkogito.svg.folder.path=/home/kogito/data/svg
+                -Dkogito.consoles.keycloak.config.client-id=kogito-mgmt-console
+            - name: RUNTIME_TYPE
+              value: quarkus
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: Always
+          startupProbe:
+            httpGet:
+              path: /q/health/live
+              port: 8080
+              scheme: HTTP
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          image: >-
+            quay.io/kiegroup/kogito-management-console:1.12
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kogito-mgmt-console
+  labels:
+    app: kogito-mgmt-console
+spec:
+  selector:
+    app: kogito-mgmt-console
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: kogito-mgmt-console
+  labels:
+    app: kogito-mgmt-console  
+spec:
+  to:
+    kind: Service
+    name: kogito-mgmt-console
+  port:
+    targetPort: http

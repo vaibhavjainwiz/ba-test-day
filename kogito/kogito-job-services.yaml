@@ -1,0 +1,10 @@
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoSupportingService
+metadata:
+  name: kogito-jobs-service
+spec:
+  image: quay.io/kiegroup/kogito-jobs-service-ephemeral:1.12
+  infra:
+    - kogito-kafka-infra   
+  replicas: 1
+  serviceType: JobsService
