@@ -1,7 +1,7 @@
 #!/bin/sh
 
-for i in {1..4}
-#for i in 5
+for i in {1..25}
+#for i in 9
 do	
 	ns=$(echo "ba-test-day-"${i})
 
