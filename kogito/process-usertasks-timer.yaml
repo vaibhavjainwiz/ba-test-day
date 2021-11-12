@@ -7,5 +7,5 @@ spec:
     - kogito-kafka-infra
     - kogito-infinispan-infra
   runtime: quarkus
-  image: 'quay.io/vajain/process-usertasks-timer-quarkus-with-console:29.0'
+  image: 'quay.io/vajain/process-usertasks-timer-quarkus-with-console:30.0'
   replicas: 1  

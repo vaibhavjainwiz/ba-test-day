@@ -9,6 +9,7 @@ do
 	mkdir -p ${TMP_FOLDER}
 
 	oc new-project ${ns}
+	oc project ${ns}
 	
 	kubectl apply -f infinispan/infinispan.yaml
 	kubectl apply -f kafka/kafka.yaml	
